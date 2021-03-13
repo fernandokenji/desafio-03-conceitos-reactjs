@@ -32,7 +32,8 @@ describe("App component", () => {
 
     await actWait();
 
-    fireEvent.click(getByText("Adicionar"));
+    const add = getByText('Adicionar')
+    await fireEvent.click(add);
 
     await actWait();
 
@@ -57,7 +58,8 @@ describe("App component", () => {
 
     await actWait();
 
-    fireEvent.click(getByText("Remover"));
+    const remove = getByText('Remover')
+    await fireEvent.click(remove);
 
     await actWait();
 

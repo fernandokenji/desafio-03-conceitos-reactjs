@@ -1,29 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import api from "./services/api";
 
 import "./styles.css";
 
 function App() {
+  const [reposi, setRepositories] = useState([]);
+
+  useEffect(() => {
+    api.get('repositories').then((resp) => {
+      setRepositories(resp.data);
+    });
+  }, []);
+
   async function handleAddRepository() {
-    // TODO
+    const resp = await api.post('repositories', {
+      title: "EJC",
+      url: "https://github.com/Rocketseat/umbriel",
+      techs: ["Node.js", "ReactJs"],
+    });
+
+    setRepositories([...reposi, resp.data]);
   }
 
   async function handleRemoveRepository(id) {
-    // TODO
+    await api.delete(`repositories/${id}`);
+
+    const newRepos = reposi.filter((rep) => rep.id != id);
+    setRepositories(newRepos);
   }
 
   return (
     <div>
       <ul data-testid="repository-list">
-        <li>
-          Repositório 1
-
-          <button onClick={() => handleRemoveRepository(1)}>
-            Remover
-          </button>
-        </li>
+        {reposi.map((reposi) => (
+          <li key={reposi.id}>
+            {reposi.title}
+            <button onClick={() => handleRemoveRepository(reposi.id)}>Remover</button>
+          </li>
+        ))}
       </ul>
 
-      <button onClick={handleAddRepository}>Adicionar</button>
+      <button onClick={() => handleAddRepository()}>Adicionar</button>
     </div>
   );
 }
